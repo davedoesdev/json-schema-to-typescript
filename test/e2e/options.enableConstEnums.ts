@@ -49,6 +49,54 @@ export const input = {
       enum: [4, 5, 6],
       title: 'ImpliedNamedInteger',
       tsEnumNames: ['Four', 'Five', 'Six']
+    },
+    oneOfNamedEnum: {
+      oneOf: [
+        {
+          type: 'integer',
+          enum: [1, 2, 3],
+          title: 'IntegerOneOfNamedEnum',
+          tsEnumNames: ['One', 'Two', 'Three']
+        },
+        {
+          type: 'string',
+          enum: ['four', 'five', 'six'],
+          title: 'StringOneOfNamedEnum',
+          tsEnumNames: ['Four', 'Five', 'Six']
+        }
+      ]
+    },
+    anyOfNamedEnum: {
+      anyOf: [
+        {
+          type: 'integer',
+          enum: [1, 2, 3],
+          title: 'IntegerAnyOfNamedEnum',
+          tsEnumNames: ['One', 'Two', 'Three']
+        },
+        {
+          type: 'string',
+          enum: ['four', 'five', 'six'],
+          title: 'StringAnyOfNamedEnum',
+          tsEnumNames: ['Four', 'Five', 'Six']
+        }
+      ]
+    },
+    allOfNamedEnum: {
+      allOf: [
+        {
+          type: 'integer',
+          enum: [1, 2, 3],
+          title: 'IntegerAllOfNamedEnum',
+          tsEnumNames: ['One', 'Two', 'Three']
+        },
+        {
+          type: 'string',
+          enum: ['four', 'five', 'six'],
+          title: 'StringAllOfNamedEnum',
+          tsEnumNames: ['Four', 'Five', 'Six']
+        }
+      ]
     }
   },
   required: [
@@ -60,7 +108,14 @@ export const input = {
     'impliedIntegerEnum',
     'impliedNamedIntegerEnum',
     'namedIntegerEnumTitle',
-    'impliedNamedIntegerEnumTitle'
+    'impliedNamedIntegerEnumTitle',
+    'oneOfNamedEnum',
+    'anyOfNamedEnum',
+    'allOfNamedEnum'
   ],
   additionalProperties: false
+}
+
+export const options = {
+  enableConstEnums: true
 }
