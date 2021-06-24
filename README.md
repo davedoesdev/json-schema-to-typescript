@@ -108,8 +108,8 @@ json2ts foo.json foo.d.ts
 json2ts --input foo.json --output foo.d.ts
 # or
 json2ts -i foo.json -o foo.d.ts
-# or
-json2ts -i schemas/**/*.json
+# or (quote globs so that your shell doesn't expand them)
+json2ts -i 'schemas/**/*.json'
 # or
 json2ts -i schemas/ -o types/
 ```
@@ -184,6 +184,12 @@ json2ts -i foo.json -o foo.d.ts --style.singleQuote --no-style.semi
 - `oneOf` ("xor", use `anyOf` instead)
 - `pattern` ([string](https://github.com/tdegrunt/jsonschema/blob/67c0e27ce9542efde0bf43dc1b2a95dd87df43c3/examples/all.js#L203), [regex](https://github.com/tdegrunt/jsonschema/blob/67c0e27ce9542efde0bf43dc1b2a95dd87df43c3/examples/all.js#L207))
 - `uniqueItems` ([eg](https://github.com/tdegrunt/jsonschema/blob/67c0e27ce9542efde0bf43dc1b2a95dd87df43c3/examples/all.js#L172))
+
+## FAQ
+
+### JSON-Schema-to-TypeScript is crashing on my giant file. What can I do?
+
+Prettier is known to run slowly on really big files. To skip formatting and improve performance, set the `format` option to `false`.
 
 ## Further Reading
 

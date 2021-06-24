@@ -12,7 +12,8 @@ import {
   TInterface,
   TIntersection,
   TNamedInterface,
-  TUnion
+  TUnion,
+  T_UNKNOWN
 } from './types/AST'
 import {log, toSafeString} from './utils'
 
@@ -51,8 +52,7 @@ function declareEnums(ast: AST, standalones: Standalones, options: Options, proc
 
   switch (ast.type) {
     case 'ENUM':
-      type = generateStandaloneEnum(ast, standalones, options) + '\n'
-      break
+      return generateStandaloneEnum(ast, standalones, options) + '\n'
     case 'ARRAY':
       return declareEnums(ast.params, standalones, options, processed)
     case 'UNION':
@@ -63,18 +63,12 @@ function declareEnums(ast: AST, standalones: Standalones, options: Options, proc
       if (ast.spreadParam) {
         type += declareEnums(ast.spreadParam, standalones, options, processed)
       }
-      break
+      return type
     case 'INTERFACE':
-      type = getSuperTypesAndParams(ast).reduce(
-        (prev, ast) => prev + declareEnums(ast, standalones, options, processed),
-        ''
-      )
-      break
+      return getSuperTypesAndParams(ast).reduce((prev, ast) => prev + declareEnums(ast, standalones, options, processed), '')
     default:
       return ''
   }
-
-  return type
 }
 
 function declareNamedInterfaces(
@@ -206,7 +200,7 @@ function generateRawType(ast: AST, options: Options): string {
 
   switch (ast.type) {
     case 'ANY':
-      return options.unknownAny ? 'unknown' : 'any'
+      return 'any'
     case 'ARRAY':
       return (() => {
         const type = generateType(ast.params, options)
@@ -241,14 +235,14 @@ function generateRawType(ast: AST, options: Options): string {
           // this is a valid state, and JSONSchema doesn't care about the item type
           if (maxItems < 0) {
             // no max items and no spread param, so just spread any
-            spreadParam = T_ANY
+            spreadParam = options.unknownAny ? T_UNKNOWN : T_ANY
           }
         }
         if (maxItems > astParams.length && ast.spreadParam === undefined) {
           // this is a valid state, and JSONSchema doesn't care about the item type
           // fill the tuple with any elements
           for (let i = astParams.length; i < maxItems; i += 1) {
-            astParams.push(T_ANY)
+            astParams.push(options.unknownAny ? T_UNKNOWN : T_ANY)
           }
         }
 
@@ -310,6 +304,8 @@ function generateRawType(ast: AST, options: Options): string {
       })()
     case 'UNION':
       return generateSetOperation(ast, options)
+    case 'UNKNOWN':
+      return 'unknown'
     case 'CUSTOM_TYPE':
       return ast.params
   }
